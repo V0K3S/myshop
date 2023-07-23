@@ -14,7 +14,7 @@ class Category(models.Model):
         return self.name
     
 class Product(models.Model):
-    category = models.ForeignKey(related_name='products', on_delete= models.CASCADE)
+    category = models.ForeignKey(Category, related_name='products', on_delete= models.CASCADE)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
@@ -25,7 +25,7 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ('name')
+        ordering = ('name',)
         index_together = (('id', 'slug'),)
         
     def __str__(self):
