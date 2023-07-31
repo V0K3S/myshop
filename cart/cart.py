@@ -26,7 +26,7 @@ class Cart(object):
         if override_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
-            self.cart[product_id]['quantity'] == quantity
+            self.cart[product_id]['quantity'] += quantity
             self.save()
             
     def save(self):
@@ -42,15 +42,15 @@ class Cart(object):
             
     def __iter__(self):
         # Iterate over the items in the cart and get the products from the database
-        products_ids = self.cart.keys()
+        product_ids = self.cart.keys()
         # get the product objects and add them to the cart
-        products = product.objects.filter(id_in=products_ids)
+        products = product.objects.filter(id__in=product_ids)
         
         cart = self.cart.copy()
         for product in products:
             cart[str(product.id)]['product'] = product
         
-        for item in cart.value():
+        for item in cart.values():
             item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']
             yield item
